@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -122,7 +122,8 @@ const Signup = () => {
           gender: data.gender,
         }
       );
-      toast.success(response.data); // Show success message from backend
+      toast.success(response.data);
+
       setData({
         name: "",
         lastname: "",
@@ -132,14 +133,19 @@ const Signup = () => {
         gender: "",
         cpassword: "",
       });
-      setEmailOtpVisible(false); // Hide email OTP field after registration
-      setPhoneOtpVisible(false); // Hide phone OTP field after registration
-      setOtpEmail(""); // Reset email OTP input
-      setOtpPhone(""); // Reset phone OTP input
+
+      setEmailOtpVisible(false);
+      setPhoneOtpVisible(false);
+      setOtpEmail("");
+      setOtpPhone("");
     } catch (error) {
-      const errorMessage =
-        error.response?.data || "Registration failed. Please try again.";
-      toast.error(errorMessage);
+      if (error.response && error.response.status === 409) {
+        toast.error("Email already registered. Please use a different email.");
+      } else {
+        const errorMessage =
+          error.response?.data || "Registration failed. Please try again.";
+        toast.error(errorMessage);
+      }
     }
   };
 
